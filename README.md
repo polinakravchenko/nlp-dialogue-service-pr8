@@ -204,3 +204,43 @@ For the practical report, the screenshots should demonstrate:
 6. JUnit/Mockito tests.
 7. Performance endpoint response.
 8. Actuator health endpoint.
+
+## Self Work — Integrated Web Interface
+
+Тема самостійної роботи: **розробка вебінтерфейсу для взаємодії з NLP-сервісом**.
+
+У цій версії frontend інтегровано безпосередньо в Spring Boot backend через стандартний каталог:
+
+```text
+src/main/resources/static/
+ ├── index.html
+ ├── styles.css
+ └── app.js
+```
+
+Після запуску backend застосунку UI доступний за адресою:
+
+```text
+http://localhost:8080/
+```
+
+Такий варіант зручний для навчальної роботи, тому що backend, REST API, NLP-компоненти, LLM endpoint-и, performance endpoint та вебінтерфейс запускаються як один застосунок. Додатковий frontend-сервер або окремий Nginx не потрібні.
+
+Інтерфейс дозволяє:
+
+- перевірити доступність сервісу через `/actuator/health/readiness`;
+- виконати OpenNLP-обробку тексту через `/api/text/process`;
+- класифікувати намір користувача через `/api/intent/classify`;
+- створити діалогову сесію;
+- надіслати повідомлення у діалог;
+- завантажити історію діалогу з БД;
+- перевірити статус LLM-інтеграції;
+- виконати генерацію відповіді через `/api/llm/generate`;
+- запустити performance test через `/api/performance/nlp`;
+- переглянути останню JSON-відповідь backend-сервісу.
+
+Опис самостійної роботи для звіту знаходиться у файлі:
+
+```text
+docs/self-work-report.md
+```

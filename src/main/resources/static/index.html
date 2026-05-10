@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NLP Dialogue Web UI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Вебінтерфейс для взаємодії з NLP-сервісом</h1>
+    </div>
+    <div class="status-card" id="connectionStatus">
+      <span class="status-dot idle"></span>
+      <span>Статус не перевірено</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="card">
+        <h2>Налаштування API</h2>
+        <label for="apiBaseUrl">Base URL NLP-сервісу</label>
+        <input id="apiBaseUrl" type="text" value="" />
+        <button id="saveSettingsBtn" class="secondary">Зберегти</button>
+        <button id="checkHealthBtn">Перевірити сервіс</button>
+        <p class="hint">За замовчуванням UI працює з тим самим Spring Boot backend на поточному host. Для іншого backend можна вказати повний Base URL.</p>
+      </section>
+
+      <nav class="card nav-card">
+        <h2>Розділи</h2>
+        <a href="#text-processing">Обробка тексту</a>
+        <a href="#intent">Визначення наміру</a>
+        <a href="#dialogue">Діалогова модель</a>
+        <a href="#llm">LLM інтеграція</a>
+        <a href="#performance">Продуктивність</a>
+        <a href="#raw-output">JSON результат</a>
+      </nav>
+    </aside>
+
+    <section class="content">
+      <section class="card" id="text-processing">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">OpenNLP pipeline</p>
+            <h2>Обробка тексту</h2>
+          </div>
+          <button id="processTextBtn">Обробити</button>
+        </div>
+        <textarea id="textInput" rows="5">Потрібно знайти сутності в тексті про Київ, Івана Петренка і документи.</textarea>
+        <div id="textProcessingResult" class="result-grid"></div>
+      </section>
+
+      <section class="card" id="intent">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">DocumentCategorizer</p>
+            <h2>Класифікація наміру користувача</h2>
+          </div>
+          <div class="button-group">
+            <button id="intentStatusBtn" class="secondary">Статус моделі</button>
+            <button id="classifyIntentBtn">Класифікувати</button>
+          </div>
+        </div>
+        <textarea id="intentInput" rows="4">Потрібно класифікувати текст і визначити намір користувача.</textarea>
+        <div id="intentResult" class="result-grid"></div>
+      </section>
+
+      <section class="card" id="dialogue">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Dialogue API + DB history</p>
+            <h2>Діалогова модель</h2>
+          </div>
+          <div class="button-group">
+            <button id="createSessionBtn" class="secondary">Створити сесію</button>
+            <button id="sendMessageBtn">Надіслати</button>
+          </div>
+        </div>
+        <div class="two-columns">
+          <div>
+            <label for="sessionTitle">Назва сесії</label>
+            <input id="sessionTitle" type="text" value="Web UI dialogue session" />
+          </div>
+          <div>
+            <label for="sessionId">Session ID</label>
+            <input id="sessionId" type="number" placeholder="Буде заповнено після створення" />
+          </div>
+        </div>
+        <label for="dialogueMessage">Повідомлення користувача</label>
+        <textarea id="dialogueMessage" rows="4">Привіт, знайди сутності в тексті: Іван Петренко працює у The Fintech Lab у Києві.</textarea>
+        <div class="button-group left">
+          <button id="loadHistoryBtn" class="secondary">Завантажити історію</button>
+          <button id="loadSessionsBtn" class="secondary">Показати сесії</button>
+        </div>
+        <div id="dialogueResult" class="chat-box"></div>
+      </section>
+
+      <section class="card" id="llm">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">GPT через API або fallback</p>
+            <h2>LLM інтеграція</h2>
+          </div>
+          <div class="button-group">
+            <button id="llmStatusBtn" class="secondary">Статус LLM</button>
+            <button id="generateLlmBtn">Згенерувати</button>
+          </div>
+        </div>
+        <textarea id="llmPrompt" rows="5">Explain the detected intent for: Потрібно знайти сутності в тексті про Київ і документи.</textarea>
+        <div id="llmResult" class="result-grid"></div>
+      </section>
+
+      <section class="card" id="performance">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Stability check</p>
+            <h2>Оцінка продуктивності NLP pipeline</h2>
+          </div>
+          <button id="performanceBtn">Запустити тест</button>
+        </div>
+        <div class="two-columns">
+          <div>
+            <label for="performanceIterations">Кількість ітерацій</label>
+            <input id="performanceIterations" type="number" value="100" min="1" max="10000" />
+          </div>
+          <div>
+            <label for="performanceText">Тестовий текст</label>
+            <input id="performanceText" type="text" value="Потрібно знайти сутності та визначити намір користувача." />
+          </div>
+        </div>
+        <div id="performanceResult" class="result-grid"></div>
+      </section>
+
+      <section class="card" id="raw-output">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Debug</p>
+            <h2>Останній JSON результат</h2>
+          </div>
+          <button id="clearOutputBtn" class="secondary">Очистити</button>
+        </div>
+        <pre id="rawOutput">Немає даних.</pre>
+      </section>
+    </section>
+  </main>
+
+  <template id="metricTemplate">
+    <article class="metric">
+      <span class="metric-label"></span>
+      <strong class="metric-value"></strong>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
