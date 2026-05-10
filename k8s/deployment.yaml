@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nlp-dialogue-service-pr8
+  labels:
+    app: nlp-dialogue-service-pr8
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nlp-dialogue-service-pr8
+  template:
+    metadata:
+      labels:
+        app: nlp-dialogue-service-pr8
+    spec:
+      containers:
+        - name: nlp-dialogue-service-pr8
+          image: nlp-dialogue-service-pr8:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "postgres"
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: nlp-dialogue-config
+                  key: SPRING_DATASOURCE_URL
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: nlp-dialogue-secret
+                  key: SPRING_DATASOURCE_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nlp-dialogue-secret
+                  key: SPRING_DATASOURCE_PASSWORD
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: nlp-dialogue-secret
+                  key: OPENAI_API_KEY
+                  optional: true
+            - name: OPENAI_MODEL
+              value: "gpt-5.4-mini"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nlp-dialogue-service-pr8
+spec:
+  type: ClusterIP
+  selector:
+    app: nlp-dialogue-service-pr8
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

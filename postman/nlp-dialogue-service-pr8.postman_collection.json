@@ -1,0 +1,75 @@
+{
+  "info": {
+    "name": "NLP Dialogue Service PR8",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health - Readiness",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/actuator/health/readiness"
+      }
+    },
+    {
+      "name": "Text - Process",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"text\": \"Потрібно класифікувати документ і визначити намір користувача.\"\n}"},
+        "url": "{{baseUrl}}/api/text/process"
+      }
+    },
+    {
+      "name": "Intent - Status",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/intent/status"}
+    },
+    {
+      "name": "LLM - Status",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/llm/status"}
+    },
+    {
+      "name": "LLM - Generate GPT Response",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"systemPrompt\": \"You are an NLP assistant for a Spring Boot service.\",\n  \"prompt\": \"Explain the detected intent for: Потрібно знайти сутності в тексті про Київ і The Fintech Lab.\"\n}"},
+        "url": "{{baseUrl}}/api/llm/generate"
+      }
+    },
+    {
+      "name": "Dialogue - Start Session",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"title\": \"PR8 scaling and LLM test\"\n}"},
+        "url": "{{baseUrl}}/api/dialogue/sessions"
+      }
+    },
+    {
+      "name": "Dialogue - Send Message",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"text\": \"Привіт, допоможи обробити текст і визначити намір.\"\n}"},
+        "url": "{{baseUrl}}/api/dialogue/sessions/1/messages"
+      }
+    },
+    {
+      "name": "Dialogue - History",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/dialogue/sessions/1/history"}
+    },
+    {
+      "name": "Performance - NLP Pipeline",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"text\": \"Потрібно класифікувати документ і виконати пошук інформації.\",\n  \"iterations\": 100\n}"},
+        "url": "{{baseUrl}}/api/performance/nlp"
+      }
+    }
+  ],
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8080"}
+  ]
+}

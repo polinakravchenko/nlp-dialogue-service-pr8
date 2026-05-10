@@ -1,0 +1,6 @@
+target/
+.idea/
+*.iml
+.git/
+.gitignore
+data/models/*.bin
